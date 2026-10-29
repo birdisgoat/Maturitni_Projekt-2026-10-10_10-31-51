@@ -1,6 +1,8 @@
+using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
-public class test_player_movement : MonoBehaviour
+public class test_player_movement : NetworkBehaviour
 {
     [SerializeField] private float walkSpeed = 5.5f;
     [SerializeField] private float runSpeed = 9.0f;
@@ -13,6 +15,7 @@ public class test_player_movement : MonoBehaviour
 
     private Camera mainCamera;
     private CharacterController characterController;
+    private Animator animator;
 
     private InputAction moveInput;
     private InputAction runInput;
@@ -24,6 +27,20 @@ public class test_player_movement : MonoBehaviour
     private Vector3 moveDirection = Vector3.zero;
     private float lookAngle = 0.0f;
 
+    public override void OnNetworkSpawn()
+    {
+        characterController = GetComponent<CharacterController>();
+        mainCamera = GetComponentInChildren<Camera>();
+        animator = GetComponentInChildren<Animator>();
+
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+
+        if (!IsOwner)
+        {
+            mainCamera.enabled = false;
+        }
+    }
     private void Start()
     {
         mainCamera = GetComponentInChildren<Camera>();
