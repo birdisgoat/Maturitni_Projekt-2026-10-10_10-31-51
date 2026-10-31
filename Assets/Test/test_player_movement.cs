@@ -13,7 +13,7 @@ public class test_player_movement : NetworkBehaviour
     [SerializeField] private float lookSens = 0.2f;
     [SerializeField] private float lookAngleLimit = 90f;
 
-    private Camera mainCamera;
+    private Camera playerCamera;
     private CharacterController characterController;
     private Animator animator;
 
@@ -30,7 +30,7 @@ public class test_player_movement : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         characterController = GetComponent<CharacterController>();
-        mainCamera = GetComponentInChildren<Camera>();
+        playerCamera = GetComponentInChildren<Camera>();
         animator = GetComponentInChildren<Animator>();
 
         Cursor.visible = false;
@@ -38,14 +38,30 @@ public class test_player_movement : NetworkBehaviour
 
         if (!IsOwner)
         {
-            mainCamera.enabled = false;
+            playerCamera.enabled = false;
+            var listener = GetComponentInChildren<AudioListener>();
+            listener.enabled = false;
+            return;
         }
+
+        int blueLayer = LayerMask.NameToLayer("Blue");
+        int redLayer = LayerMask.NameToLayer("Red");
+
+        bool isBluePlayer = OwnerClientId == 0;
+        if (isBluePlayer)
+        {
+            playerCamera.cullingMask |= 1 << blueLayer;
+            gameObject.layer = LayerMask.NameToLayer("BluePlayer");
+        }
+        else
+        {
+            playerCamera.cullingMask |= 1 << redLayer;
+            gameObject.layer = LayerMask.NameToLayer("RedPlayer");
+        }
+
     }
     private void Start()
     {
-        mainCamera = GetComponentInChildren<Camera>();
-        characterController = GetComponent<CharacterController>();
-
         moveInput = InputSystem.actions.FindAction("Move");
         runInput = InputSystem.actions.FindAction("Sprint");
 
@@ -61,6 +77,10 @@ public class test_player_movement : NetworkBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if (!IsOwner)
+        {
+            return;
+        }
         Vector2 moveVector = moveInput.ReadValue<Vector2>();
         Vector2 mouseDelta = new Vector2(Mouse.current.delta.x.ReadValue(), Mouse.current.delta.y.ReadValue());
 
@@ -119,7 +139,7 @@ public class test_player_movement : NetworkBehaviour
         lookAngle += -mouseDelta.y * lookSens;
         lookAngle = Mathf.Clamp(lookAngle, -lookAngleLimit, lookAngleLimit);
 
-        mainCamera.transform.localRotation = Quaternion.Euler(lookAngle, 0, 0);
+        playerCamera.transform.localRotation = Quaternion.Euler(lookAngle, 0, 0);
         transform.rotation *= Quaternion.Euler(0, mouseDelta.x * lookSens, 0);
 
     }
