@@ -13,6 +13,8 @@ public class test_player_movement : NetworkBehaviour
     [SerializeField] private float lookSens = 0.2f;
     [SerializeField] private float lookAngleLimit = 90f;
 
+    private PlayerUiManager playerUiManager;
+
     private Camera playerCamera;
     private CharacterController characterController;
     private Animator animator;
@@ -23,16 +25,17 @@ public class test_player_movement : NetworkBehaviour
     private InputAction jumpInput;
     private bool jumped = false;
 
+
     private float currentMoveSpeed = 0.0f;
     private Vector3 moveDirection = Vector3.zero;
     private float lookAngle = 0.0f;
 
     public override void OnNetworkSpawn()
     {
+        playerUiManager = GetComponent<PlayerUiManager>();
         characterController = GetComponent<CharacterController>();
         playerCamera = GetComponentInChildren<Camera>();
         animator = GetComponentInChildren<Animator>();
-
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 
@@ -64,7 +67,6 @@ public class test_player_movement : NetworkBehaviour
     {
         moveInput = InputSystem.actions.FindAction("Move");
         runInput = InputSystem.actions.FindAction("Sprint");
-
         jumpInput = InputSystem.actions.FindAction("jump");
         jumpInput.started += Jumped;
 
@@ -74,7 +76,6 @@ public class test_player_movement : NetworkBehaviour
         currentMoveSpeed = walkSpeed;
     }
 
-    // Update is called once per frame
     private void Update()
     {
         if (!IsOwner)
@@ -99,8 +100,11 @@ public class test_player_movement : NetworkBehaviour
             currentMoveSpeed = walkSpeed;
         }
 
-        HandleMovement(moveVector);
-        HandleLooking(mouseDelta);
+        if (!playerUiManager.isActive)
+        {
+            HandleMovement(moveVector);
+            HandleLooking(mouseDelta);
+        }
     }
 
     private void HandleMovement(Vector2 moveVector)

@@ -2,15 +2,21 @@ using UnityEngine;
 
 public class PlayerCanvasScript : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    [SerializeField] private GameObject escPlayerUI;
+
     void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+    }
+
+    public void ContinueButton ()
+    {
+        escPlayerUI.SetActive(false);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 }
