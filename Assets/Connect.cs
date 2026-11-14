@@ -9,15 +9,16 @@ using UnityEngine.UI;
 
 public class Connect : MonoBehaviour
 {
-    [SerializeField]private Button hostButton;
-    [SerializeField]private Button clientButton;
-    [SerializeField]private TMP_InputField roomCodeInput;
-    [SerializeField]private GameObject menuUi;
-    [SerializeField]private GameObject loadingPanel;
+    [SerializeField] private Button hostButton;
+    [SerializeField] private Button clientButton;
+    [SerializeField] private TMP_InputField roomCodeInput;
+    [SerializeField] private GameObject menuUi;
+    [SerializeField] private GameObject loadingPanel;
 
-
+    public static string SessionCode { get; private set; }
     private async void Start()
     {
+        SessionCode = "";
         var options = new InitializationOptions()
        .SetProfile("player" + Random.Range(0, 100000));
         await UnityServices.InitializeAsync();
@@ -48,11 +49,13 @@ public class Connect : MonoBehaviour
         }.WithRelayNetwork();
         var session = await MultiplayerService.Instance.CreateSessionAsync(options);
         Debug.Log("Kód: " + session.Code);
+        SessionCode = session.Code;
         return session.Code;
     }
 
     private async Task JoinSessionAsClient()
     {
-        await MultiplayerService.Instance.JoinSessionByCodeAsync(roomCodeInput.text);
+        var session = await MultiplayerService.Instance.JoinSessionByCodeAsync(roomCodeInput.text);
+        SessionCode = session.Code;
     }
 }

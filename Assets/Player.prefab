@@ -193,6 +193,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerUiManager
   ShowTopMostFoldoutHeaderGroup: 1
+  isActive: 0
+  sessionCodeText: {fileID: 8828751624330486005}
 --- !u!1 &4539660561869497536
 GameObject:
   m_ObjectHideFlags: 0
@@ -444,6 +446,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5517336394648622121, guid: fc0a38209d12dd34096d1b94e4ccfe12, type: 3}
+      propertyPath: m_text
+      value: uighfsduifi
+      objectReference: {fileID: 0}
     - target: {fileID: 6177837376130033976, guid: fc0a38209d12dd34096d1b94e4ccfe12, type: 3}
       propertyPath: m_Name
       value: PlayerCanvas
@@ -542,3 +548,14 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8755136737822283048, guid: fc0a38209d12dd34096d1b94e4ccfe12, type: 3}
   m_PrefabInstance: {fileID: 3897727949935391964}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8828751624330486005 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5517336394648622121, guid: fc0a38209d12dd34096d1b94e4ccfe12, type: 3}
+  m_PrefabInstance: {fileID: 3897727949935391964}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
